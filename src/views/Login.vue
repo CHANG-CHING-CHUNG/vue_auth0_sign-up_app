@@ -149,6 +149,25 @@
             >
           </div>
         </template>
+        <div class="horizontal"></div>
+        <b-form-group>
+          <div class="my-10">
+            <b-button
+              class="hover w-280 text-align-left"
+              variant="outline-primary"
+              ><img class="social-icon" :src="images.google" />
+              Continue with Google
+            </b-button>
+          </div>
+          <div class="my-10">
+            <b-button
+              class="hover w-280 text-align-left"
+              variant="outline-primary"
+              ><img class="social-icon" :src="images.facebook" />
+              Continue with Facebook
+            </b-button>
+          </div>
+        </b-form-group>
       </b-form>
     </b-card>
   </div>
@@ -157,7 +176,13 @@
 <script>
 export default {
   data() {
+    const authUrl = "https://john0924.us.auth0.com/authorize?";
+    const responseType = "token";
+    const clientId = "hzCIVCYEa29xikYvkQGUq2TfCqMvK1Fy";
+    const connection = "google-oauth2";
+    const redirectUri = "http://localhost:8080/";
     return {
+      googleOauth2: `${authUrl}response_type=${responseType}&client_id=${clientId}&connection=${connection}&redirect_uri=${redirectUri}`,
       signUp: false,
       length: false,
       lowerCase: false,
@@ -169,20 +194,14 @@ export default {
       validPassword: false,
       form: {
         email: "",
-        name: "",
-        food: null,
-        checked: [],
+        password: "",
+        confirmPassword: "",
       },
-      foods: [
-        { text: "Select One", value: null },
-        "Carrots",
-        "Beans",
-        "Tomatoes",
-        "Corn",
-      ],
       show: false,
       images: {
         heart: require("../assets/images/heart.webp"),
+        google: require("../assets/images/google.png"),
+        facebook: require("../assets/images/facebook.png"),
       },
     };
   },
@@ -233,10 +252,8 @@ export default {
       }
       if (count === 5) {
         this.validPassword = true;
-        console.log("this.validPassword", this.validPassword);
       } else {
         this.validPassword = false;
-        console.log("this.validPassword", this.validPassword);
       }
       this.showTooltip();
     },
@@ -248,14 +265,8 @@ export default {
       event.preventDefault();
       // Reset our form values
       this.form.email = "";
-      this.form.name = "";
-      this.form.food = null;
-      this.form.checked = [];
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
+      this.form.password = "";
+      this.form.confirmPassword = null;
     },
   },
 };
@@ -308,5 +319,31 @@ export default {
 }
 .text {
   color: white;
+}
+.social-icon {
+  max-width: 25px;
+  margin-right: 15px;
+}
+.btn-outline-primary.hover:hover {
+  color: #fff;
+  background-color: #2b8ff9;
+  border-color: #007bff;
+}
+.w-280 {
+  min-width: 280px;
+}
+.text-align-left {
+  text-align: left;
+}
+.my-10 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.horizontal {
+  align-items: center;
+  border-bottom: 1px solid #dadde1;
+  display: flex;
+  margin-bottom: 15px;
+  text-align: center;
 }
 </style>
