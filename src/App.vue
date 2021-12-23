@@ -25,4 +25,7 @@
     }
   }
 }
+.tooltip-inner {
+  max-width: 500px !important;
+}
 </style>
