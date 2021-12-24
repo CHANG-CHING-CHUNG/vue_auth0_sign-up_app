@@ -50,7 +50,7 @@
                 :type="inputType"
                 v-model="form.password"
                 placeholder="Enter password"
-                :state="passwordState"
+                :state="validPassword"
                 @input="validatePassword"
                 required
               ></b-form-input>
@@ -204,7 +204,7 @@ export default {
       specialChar: false,
       green: "green",
       red: "red",
-      validPassword: false,
+      validPassword: null,
       form: {
         email: "",
         password: "",
@@ -219,6 +219,17 @@ export default {
     };
   },
   methods: {
+    isPasswordMatched() {
+      if (
+        this.form.confirmPassword &&
+        this.form.password === this.form.confirmPassword
+      ) {
+        this.confirmPasswordState = true;
+      } else {
+        this.confirmPasswordState = false;
+      }
+      return this.confirmPasswordState;
+    },
     checkEmpty() {
       if (!this.form.password.length) return (this.passwordState = false);
       return (this.passwordState = true);
@@ -238,6 +249,10 @@ export default {
       this.form.confirmPassword = "";
       this.inputType = "password";
       this.message = "Show";
+      this.emailState = null;
+      this.passwordState = null;
+      this.validPassword = null;
+      this.confirmPasswordState = null;
     },
     togglePassword() {
       if (this.inputType === "password") {
@@ -299,13 +314,34 @@ export default {
       }
       this.showTooltip();
     },
+    login() {
+      const email = this.validateEmail();
+      const password = this.checkEmpty();
+      if (!(email && password)) {
+        console.log("something went wrong");
+        return false;
+      }
+      console.log("login success");
+      return true;
+    },
+    signup() {
+      const email = this.validateEmail();
+      const password = this.validatePassword(this.form.password);
+      const isPasswordMatched = this.isPasswordMatched();
+      if (!(email && password && isPasswordMatched)) {
+        console.log("something went wrong");
+        return false;
+      }
+      console.log("sign up success");
+      return true;
+    },
     onSubmit(event) {
       event.preventDefault();
-      if (!(this.validateEmail() && this.checkEmpty())) {
-        console.log("something went wrong");
-        return;
+      if (!this.signUp) {
+        this.login();
+      } else {
+        this.signup();
       }
-      console.log("success");
     },
     onReset(event) {
       event.preventDefault();
