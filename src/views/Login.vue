@@ -3,7 +3,7 @@
     <b-card body-class="max-w-350">
       <span class="title"> Welcome </span>
       <img class="heart-img" :src="images.heart" />
-      <b-form class="px-15" @submit="onSubmit" @reset="onReset">
+      <b-form novalidate class="px-15" @submit="onSubmit" @reset="onReset">
         <template v-if="signUp !== true">
           <b-card-text> Log in to John's secret area to continue </b-card-text>
         </template>
@@ -22,96 +22,96 @@
               v-model="form.email"
               type="email"
               placeholder="Enter email"
+              @input="validateEmail"
+              :state="emailState"
               required
             ></b-form-input>
           </b-input-group>
         </b-form-group>
 
-        <template v-if="signUp !== true">
-          <b-form-group id="input-group-2" label-for="input-2">
-            <b-input-group class="mb-2">
-              <b-input-group-prepend is-text>
-                <b-icon icon="lock"></b-icon>
-              </b-input-group-prepend>
+        <b-form-group id="input-group-2" label-for="input-2">
+          <b-input-group class="mb-2">
+            <b-input-group-prepend is-text>
+              <b-icon icon="lock"></b-icon>
+            </b-input-group-prepend>
+            <template v-if="signUp !== true">
               <b-form-input
                 id="input-2"
-                type="password"
+                :type="inputType"
                 v-model="form.password"
+                :state="passwordState"
                 placeholder="Enter password"
                 required
               ></b-form-input>
-            </b-input-group>
-          </b-form-group>
-        </template>
-        <template v-else>
-          <b-form-group id="input-group-2" label-for="input-2">
-            <b-input-group class="mb-2">
-              <b-input-group-prepend is-text>
-                <b-icon icon="lock"></b-icon>
-              </b-input-group-prepend>
+            </template>
+            <template v-else>
               <b-form-input
                 id="input-2"
-                type="password"
+                :type="inputType"
                 v-model="form.password"
                 placeholder="Enter password"
+                :state="passwordState"
                 @input="validatePassword"
                 required
               ></b-form-input>
-            </b-input-group>
-            <b-tooltip
-              :show.sync="show"
-              target="input-2"
-              title="Tooltip title"
-              triggers="focus"
-            >
-              <div :class="`flex flex-start ${length ? green : red}`">
-                <span class="icon"
-                  ><b-icon
-                    :icon="`${length ? 'check-circle' : 'backspace-reverse'}`"
-                  ></b-icon
-                ></span>
-                least 8 characters in length
-              </div>
-              <div :class="`flex flex-start ${lowerCase ? green : red}`">
-                <span class="icon"
-                  ><b-icon
-                    :icon="`${
-                      lowerCase ? 'check-circle' : 'backspace-reverse'
-                    }`"
-                  ></b-icon
-                ></span>
-                Contain Lower case latters (a-z)
-              </div>
-              <div :class="`flex flex-start ${upperCase ? green : red}`">
-                <span class="icon"
-                  ><b-icon
-                    :icon="`${
-                      upperCase ? 'check-circle' : 'backspace-reverse'
-                    }`"
-                  ></b-icon
-                ></span>
-                Contain Upper case latters (A-Z)
-              </div>
-              <div :class="`flex flex-start ${number ? green : red}`">
-                <span class="icon"
-                  ><b-icon
-                    :icon="`${number ? 'check-circle' : 'backspace-reverse'}`"
-                  ></b-icon
-                ></span>
-                Contain Numbers (i.e. 0.9)
-              </div>
-              <div :class="`flex flex-start ${specialChar ? green : red}`">
-                <span class="icon"
-                  ><b-icon
-                    :icon="`${
-                      specialChar ? 'check-circle' : 'backspace-reverse'
-                    }`"
-                  ></b-icon
-                ></span>
-                Contain Special characters (e.g. !@#$%^&*)
-              </div>
-            </b-tooltip>
-          </b-form-group>
+            </template>
+            <b-input-group-append>
+              <b-button @click="togglePassword" size="sm" text="Button">{{
+                message
+              }}</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+        <template v-if="signUp === true">
+          <b-tooltip
+            :show.sync="show"
+            target="input-2"
+            title="Tooltip title"
+            triggers="focus"
+          >
+            <div :class="`flex flex-start ${length ? green : red}`">
+              <span class="icon"
+                ><b-icon
+                  :icon="`${length ? 'check-circle' : 'backspace-reverse'}`"
+                ></b-icon
+              ></span>
+              least 8 characters in length
+            </div>
+            <div :class="`flex flex-start ${lowerCase ? green : red}`">
+              <span class="icon"
+                ><b-icon
+                  :icon="`${lowerCase ? 'check-circle' : 'backspace-reverse'}`"
+                ></b-icon
+              ></span>
+              Contain Lower case latters (a-z)
+            </div>
+            <div :class="`flex flex-start ${upperCase ? green : red}`">
+              <span class="icon"
+                ><b-icon
+                  :icon="`${upperCase ? 'check-circle' : 'backspace-reverse'}`"
+                ></b-icon
+              ></span>
+              Contain Upper case latters (A-Z)
+            </div>
+            <div :class="`flex flex-start ${number ? green : red}`">
+              <span class="icon"
+                ><b-icon
+                  :icon="`${number ? 'check-circle' : 'backspace-reverse'}`"
+                ></b-icon
+              ></span>
+              Contain Numbers (i.e. 0.9)
+            </div>
+            <div :class="`flex flex-start ${specialChar ? green : red}`">
+              <span class="icon"
+                ><b-icon
+                  :icon="`${
+                    specialChar ? 'check-circle' : 'backspace-reverse'
+                  }`"
+                ></b-icon
+              ></span>
+              Contain Special characters (e.g. !@#$%^&*)
+            </div>
+          </b-tooltip>
         </template>
 
         <template v-if="signUp === true">
@@ -124,6 +124,7 @@
                 id="input-3"
                 type="password"
                 v-model="form.confirmPassword"
+                :state="confirmPasswordState"
                 placeholder="Confirm password"
                 required
               ></b-form-input>
@@ -135,7 +136,7 @@
           <b-button type="submit" variant="primary">Log in</b-button>
           <div class="grey py-20">
             Don't have an account?
-            <b-button size="sm" variant="success" @click="signUp = true"
+            <b-button size="sm" variant="success" @click="switchPage"
               >Sign up</b-button
             >
           </div>
@@ -144,7 +145,7 @@
           <b-button type="submit" variant="primary">Sign up</b-button>
           <div class="grey py-20">
             Already have an account?
-            <b-button size="sm" variant="success" @click="signUp = false"
+            <b-button size="sm" variant="success" @click="switchPage"
               >Log in</b-button
             >
           </div>
@@ -153,6 +154,8 @@
         <b-form-group>
           <div class="my-10">
             <b-button
+              target="_self"
+              :href="googleOauth2"
               class="hover w-280 text-align-left"
               variant="outline-primary"
               ><img class="social-icon" :src="images.google" />
@@ -161,6 +164,8 @@
           </div>
           <div class="my-10">
             <b-button
+              target="_blank"
+              :href="facebook"
               class="hover w-280 text-align-left"
               variant="outline-primary"
               ><img class="social-icon" :src="images.facebook" />
@@ -179,10 +184,18 @@ export default {
     const authUrl = "https://john0924.us.auth0.com/authorize?";
     const responseType = "token";
     const clientId = "hzCIVCYEa29xikYvkQGUq2TfCqMvK1Fy";
-    const connection = "google-oauth2";
+    const connections = { googleOauth: "google-oauth2", facebook: "facebook" };
     const redirectUri = "http://localhost:8080/";
+    const googleOauth2 = `${authUrl}response_type=${responseType}&client_id=${clientId}&connection=${connections.googleOauth}&redirect_uri=${redirectUri}`;
+    const facebook = `${authUrl}response_type=${responseType}&client_id=${clientId}&connection=${connections.facebook}&redirect_uri=${redirectUri}`;
     return {
-      googleOauth2: `${authUrl}response_type=${responseType}&client_id=${clientId}&connection=${connection}&redirect_uri=${redirectUri}`,
+      emailState: null,
+      passwordState: null,
+      confirmPasswordState: null,
+      inputType: "password",
+      message: "show",
+      facebook,
+      googleOauth2,
       signUp: false,
       length: false,
       lowerCase: false,
@@ -206,6 +219,35 @@ export default {
     };
   },
   methods: {
+    checkEmpty() {
+      if (!this.form.password.length) return (this.passwordState = false);
+      return (this.passwordState = true);
+    },
+    validateEmail() {
+      const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+      if (regex.test(this.form.email)) return (this.emailState = true);
+      return (this.emailState = false);
+    },
+    switchPage() {
+      this.signUp = !this.signUp;
+      this.reSet();
+    },
+    reSet() {
+      this.form.email = "";
+      this.form.password = "";
+      this.form.confirmPassword = "";
+      this.inputType = "password";
+      this.message = "Show";
+    },
+    togglePassword() {
+      if (this.inputType === "password") {
+        this.inputType = "text";
+        this.message = "Hide";
+      } else {
+        this.inputType = "password";
+        this.message = "Show";
+      }
+    },
     showTooltip() {
       if (this.validPassword) {
         this.show = false;
@@ -259,7 +301,11 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-      alert(JSON.stringify(this.form));
+      if (!(this.validateEmail() && this.checkEmpty())) {
+        console.log("something went wrong");
+        return;
+      }
+      console.log("success");
     },
     onReset(event) {
       event.preventDefault();
